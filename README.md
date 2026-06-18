@@ -1,112 +1,85 @@
-```markdown
-# Portfolio-Django
+# Portfolio — Aarav Bhattarai
 
-A professional personal portfolio application built with Django. This platform showcases projects, personal information, and provides an integrated contact mechanism for potential clients or employers.
+Personal portfolio website built with Django. Features smooth scrolling, dark/light theme, typing animation, and a contact form with email notifications.
 
----
+## Tech Stack
 
-## 🚀 Features
+- **Backend:** Django 6.0 (Python 3.12)
+- **Frontend:** HTML5, CSS3, JavaScript
+- **Animation:** Lenis (smooth scroll), GSAP (marquees, typing)
+- **Email:** SMTP via Gmail (app password)
 
-* **Dynamic Project Showcase:** Easily add, edit, or remove project entries from the backend.
-* **Responsive Design:** Fully mobile-friendly layout optimized for all screen sizes.
-* **Contact Management:** Secure contact form for user inquiries with email notifications.
-* **Admin Panel:** Utilizes Django's built-in Admin interface for robust content management.
+## Features
 
-## 🛠️ Tech Stack
+- Hero section with code-block typing animation
+- About section with marquee + bio
+- Skills section with tech icon marquee + 3-column grid
+- Projects section with "Coming Soon" placeholder and GitHub link
+- Certification cards with PDF download links
+- Contact form that emails submissions via Gmail SMTP
+- Dark/light theme toggle persisted to localStorage
+- Responsive design (breakpoints at 1024px, 768px, 480px)
+- Smooth anchor scrolling via Lenis
 
-* **Framework:** Django (Python)
-* **Environment Management:** `python-dotenv`
-* **Database:** SQLite (Development) / PostgreSQL (Production ready)
-* **Frontend:** HTML5, CSS3, JavaScript
+## Setup
 
-## ⚙️ Prerequisites
+1. **Clone and enter the project:**
+   ```bash
+   git clone https://github.com/dijash/Portfolio-Django.git
+   cd Portfolio-Django
+   ```
 
-Ensure you have the following installed on your local environment:
-* Python 3.x
-* pip (Python package installer)
-* Git
+2. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   venv\Scripts\activate     # Windows
+   ```
 
----
+3. **Install dependencies:**
+   ```bash
+   pip install django python-dotenv
+   ```
 
-## 📥 Installation & Setup
+4. **Create a `.env` file** in the project root:
+   ```env
+   SECRET_KEY=your-django-secret-key
+   DEBUG=True
+   EMAIL_HOST_USER=your-email@gmail.com
+   EMAIL_HOST_PASSWORD=your-16-char-gmail-app-password
+   ```
 
-### 1. Clone the repository
-```bash
-git clone [https://github.com/Dijash/Portfolio-Django.git](https://github.com/Dijash/Portfolio-Django.git)
-cd Portfolio-Django
+5. **Run migrations and start the server:**
+   ```bash
+   python manage.py migrate
+   python manage.py runserver
+   ```
 
-```
+Visit `http://127.0.0.1:8000/` in your browser.
 
-### 2. Set up a virtual environment
-
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate on Windows:
-venv\Scripts\activate
-
-# Activate on macOS/Linux:
-source venv/bin/activate
-
-```
-
-### 3. Install dependencies
-
-```bash
-pip install python-dotenv
-pip install -r requirements.txt
-
-```
-
-### 4. Environment Variables Configuration (`.env`)
-
-Create a `.env` file in your root directory (the same folder where `manage.py` lives). **Do not commit this file to GitHub.**
-
-```env
-DEBUG=True
-SECRET_KEY=your_django_secret_key_here
-
-# Email Configuration (SMTP)
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your16characterapppassword
+## Project Structure
 
 ```
-
-### 5. Apply Migrations
-
-```bash
-python manage.py migrate
-
+├── core/                    # Django app (views, URLs, templates)
+│   ├── templates/core/      # home.html (single-page content)
+│   ├── urls.py              # Route definitions
+│   └── views.py             # Home + contact views
+├── portfolio/               # Django project configuration
+│   ├── settings.py          # All settings
+│   ├── urls.py              # Root URL config
+│   └── templates/           # Shared templates
+│       ├── layouts/         # base.html
+│       └── includes/        # navbar.html, footer.html
+├── static/                  # Static assets
+│   ├── css/                 # global.css, navbar.css, footer.css
+│   ├── js/                  # script.js, navbar.js
+│   └── assets/              # Certificates PDFs
+├── .env                     # Environment variables (not committed)
+└── manage.py
 ```
 
-### 6. Create a Superuser
+## Author
 
-```bash
-python manage.py createsuperuser
-
-```
-
-### 7. Run the Development Server
-
-```bash
-python manage.py runserver
-
-```
-
-Open your browser and navigate to `http://127.0.0.1:8000/`.
-
----
-
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to contribute to the project structure or codebase.
-
-## 👤 Author
-
-* **GitHub:** [@Dijash](https://www.google.com/search?q=https://github.com/Dijash)
-
-```
-
-```
+**Aarav Bhattarai**
+- GitHub: [@dijash](https://github.com/dijash)
+- LinkedIn: [Aarav Bhattarai](https://www.linkedin.com/in/aarav-bhattarai-90497724b/)
