@@ -120,7 +120,8 @@ main {
   white-space: pre;
 }
 
-.cursor {
+#typing-code::after {
+  content: '|';
   animation: blink 0.8s step-end infinite;
 }
 
