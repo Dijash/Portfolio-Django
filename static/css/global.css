@@ -436,11 +436,22 @@ main {
 
 .works-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
   margin-bottom: 60px;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.works-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.works-header-bottom {
+  display: flex;
+  justify-content: center;
 }
 
 .title-left {
@@ -554,13 +565,6 @@ main {
 }
 
 @media (max-width: 768px) {
-  .works-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .title-right {
-    text-align: left;
-  }
   .grid-row {
     flex-direction: column;
   }
