@@ -8,7 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
     smooth: true,
   });
 
-  lenis.on('scroll', ScrollTrigger.update);
+  lenis.on('scroll', (e) => {
+    ScrollTrigger.update();
+    const progressBar = document.getElementById('scrollProgress');
+    if (progressBar) {
+      progressBar.style.width = `${e.progress * 100}%`;
+    }
+  });
 
   ScrollTrigger.scrollerProxy(document.body, {
     scrollTop(value) {
@@ -160,6 +166,64 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    const hero = document.querySelector('.hero');
+    const codeBlock = document.querySelector('.code-block');
+    if (hero && codeBlock) {
+      hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(codeBlock, {
+          rotationY: x * 4,
+          rotationX: -y * 4,
+          transformPerspective: 800,
+          ease: 'power2.out',
+          duration: 0.6,
+        });
+      });
+      hero.addEventListener('mouseleave', () => {
+        gsap.to(codeBlock, {
+          rotationY: 0,
+          rotationX: 0,
+          ease: 'power2.out',
+          duration: 0.6,
+        });
+      });
+    }
+
+    gsap.to('.about .marquee-inner', {
+      yPercent: -15,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.about',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+
+    gsap.to('#skills .marquee-inner', {
+      yPercent: -15,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#skills',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+
+    gsap.to('.cert-section .marquee-inner', {
+      yPercent: -15,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.cert-section',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+
     return () => {
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
@@ -174,13 +238,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  const marqueeTweens = [];
   document.querySelectorAll('.marquee-inner').forEach(el => {
     el.innerHTML += el.innerHTML;
-    gsap.to(el, {
+    const tween = gsap.to(el, {
       xPercent: -50,
       ease: "none",
       duration: 15,
       repeat: -1
+    });
+    marqueeTweens.push({ el, tween });
+    el.addEventListener('mouseenter', () => tween.pause());
+    el.addEventListener('mouseleave', () => tween.resume());
+  });
+
+  const navLinks = document.querySelectorAll('.dropdown-menu a');
+  const sections = document.querySelectorAll('section[id]');
+  let activeNavId = '';
+
+  function updateActiveNav(id) {
+    if (id === activeNavId) return;
+    activeNavId = id;
+    navLinks.forEach(link => {
+      const isActive = link.getAttribute('href') === `#${id}`;
+      link.classList.toggle('active', isActive);
+    });
+  }
+
+  sections.forEach(section => {
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 40%',
+      end: 'bottom 40%',
+      onEnter: () => updateActiveNav(section.id),
+      onEnterBack: () => updateActiveNav(section.id),
     });
   });
 
@@ -220,14 +311,66 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(typeLoop, 500);
 
   const techMarquee = document.querySelector('.tech-marquee-inner');
+  let techTween = null;
   if (techMarquee) {
     techMarquee.innerHTML += techMarquee.innerHTML;
-    gsap.to(techMarquee, {
+    techTween = gsap.to(techMarquee, {
       xPercent: -50,
       ease: "none",
       duration: 20,
       repeat: -1
     });
+    techMarquee.addEventListener('mouseenter', () => techTween.pause());
+    techMarquee.addEventListener('mouseleave', () => techTween.resume());
+  }
+
+  const codeBlockDrag = document.querySelector('.code-block');
+  const heroSection = document.querySelector('.hero');
+  if (codeBlockDrag && heroSection) {
+    let isDragging = false;
+    let startX, startY, origX, origY, dragX = 0, dragY = 0;
+    let bMinX, bMaxX, bMinY, bMaxY;
+
+    function onStart(e) {
+      isDragging = true;
+      const point = e.touches ? e.touches[0] : e;
+      startX = point.clientX;
+      startY = point.clientY;
+      origX = dragX;
+      origY = dragY;
+      const hRect = heroSection.getBoundingClientRect();
+      const bRect = codeBlockDrag.getBoundingClientRect();
+      bMinX = hRect.left - bRect.left;
+      bMaxX = hRect.right - bRect.right;
+      bMinY = hRect.top - bRect.top;
+      bMaxY = hRect.bottom - bRect.bottom;
+      codeBlockDrag.style.cursor = 'grabbing';
+    }
+
+    function onMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      const point = e.touches ? e.touches[0] : e;
+      const dx = point.clientX - startX;
+      const dy = point.clientY - startY;
+      dragX = Math.max(bMinX, Math.min(bMaxX, origX + dx));
+      dragY = Math.max(bMinY, Math.min(bMaxY, origY + dy));
+      gsap.set(codeBlockDrag, { x: dragX, y: dragY });
+    }
+
+    function onEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      codeBlockDrag.style.cursor = 'grab';
+    }
+
+    codeBlockDrag.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onEnd);
+    codeBlockDrag.addEventListener('touchstart', onStart, { passive: true });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd);
+    codeBlockDrag.style.cursor = 'grab';
   }
 
   document.querySelectorAll('a[href^="#"]').forEach(link => {

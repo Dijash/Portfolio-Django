@@ -161,6 +161,15 @@
   transform: scale(1.02);
 }
 
+.dropdown-menu li a:active {
+  transform: scale(0.98);
+}
+
+.dropdown-menu li a.active {
+  background-color: var(--muted-bg);
+  font-weight: 700;
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 16px 20px;
